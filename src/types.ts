@@ -7,6 +7,8 @@ export interface ScannedData {
   address: string;
   email: string;
   website: string;
+  fallbackUsed?: boolean;
+  fallbackReason?: string;
 }
 
 export interface ScanRecord {

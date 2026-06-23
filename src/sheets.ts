@@ -12,6 +12,15 @@ export function extractSpreadsheetId(urlOrId: string): string {
 }
 
 export async function createGoogleSheet(accessToken: string, titleName: string) {
+  if (accessToken === "mock_token") {
+    // Artificial 1 second delay for mock connection realism
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return {
+      spreadsheetId: "1_insta_scan_mock_sheets_db_example_" + Math.random().toString(36).substr(2, 9),
+      spreadsheetUrl: "https://docs.google.com/spreadsheets/d/1_insta_scan_mock_sheets_db_example/edit",
+    };
+  }
+
   const url = "https://sheets.googleapis.com/v4/spreadsheets";
   
   const body = {
@@ -77,6 +86,11 @@ export async function appendGoogleSheet(
   spreadsheetId: string,
   rows: any[][]
 ) {
+  if (accessToken === "mock_token") {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    return { updates: { updatedRows: rows.length } };
+  }
+
   // Use "Scanned Contacts" specifically if it exists, or write to the spreadsheet generally
   // To verify sheet names or keep it resilient, send values to Sheet1 or let sheets auto-route.
   // We specify range 'A:I'. If they created database manually via link without 'Scanned Contacts', we target general 'A:I'.

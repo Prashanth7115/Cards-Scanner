@@ -80,6 +80,10 @@ export const getAccessToken = (): string | null => {
   return cachedAccessToken;
 };
 
+export const setCachedAccessToken = (token: string | null) => {
+  cachedAccessToken = token;
+};
+
 // Logout from Google
 export const logout = async () => {
   if (auth) {

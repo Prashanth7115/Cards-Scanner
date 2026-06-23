@@ -28,7 +28,7 @@ import {
   ArrowUpRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { initAuth, googleSignIn, logout, getAccessToken, isFirebasePlaceholder } from "./firebase";
+import { initAuth, googleSignIn, logout, getAccessToken, isFirebasePlaceholder, setCachedAccessToken } from "./firebase";
 import { createGoogleSheet, appendGoogleSheet, extractSpreadsheetId } from "./sheets";
 import { ScanRecord, ScannedData } from "./types";
 
@@ -181,6 +181,22 @@ export default function App() {
       setupWarningTimeoutRef.current = setTimeout(() => {
         setShowSetupWarning(false);
       }, 6000); // Auto-fade/dismiss in 6 seconds
+
+      setIsLoggingIn(true);
+      setTimeout(() => {
+        const demoUser = {
+          uid: "demo_google_sheets_sandbox",
+          displayName: "Guest Workspacer",
+          email: "prashanth11577@gmail.com",
+          photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+        };
+        setUser(demoUser);
+        setCachedAccessToken("mock_token");
+        setToken("mock_token");
+        setNeedsAuth(false);
+        setIsLoggingIn(false);
+        triggerToast("Connected in Sandbox Mode! Simulating Google Sheets sync.", "success");
+      }, 800);
       return;
     }
     setIsLoggingIn(true);
@@ -1089,7 +1105,18 @@ Scan Date: ${record.timestamp}`;
                     <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#a8c7fa] text-[#00315c] text-[10px] font-bold">2</span>
                     Scan Result Details
                   </h2>
-                  <span className="text-[10px] text-slate-450 uppercase tracking-widest font-mono font-medium">Active Scan Engine</span>
+                  {scanResult && !scanError ? (
+                    <button
+                      onClick={resetScanEngine}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#a8c7fa]/10 hover:bg-[#a8c7fa]/25 border border-[#a8c7fa]/20 text-[#a8c7fa] hover:text-white rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all active:scale-95 cursor-pointer"
+                      title="Clear current details and scan a brand-new card"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 text-[#a8c7fa] shrink-0" />
+                      <span>Scan Again</span>
+                    </button>
+                  ) : (
+                    <span className="text-[10px] text-slate-450 uppercase tracking-widest font-mono font-medium">Active Scan Engine</span>
+                  )}
                 </div>
 
                 {/* Holographic scanning effect */}
@@ -1324,11 +1351,11 @@ Scan Date: ${record.timestamp}`;
                         </button>
                         <button
                           onClick={resetScanEngine}
-                          className="flex-1 sm:flex-initial px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5"
+                          className="flex-1 sm:flex-initial px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold rounded-xl text-xs uppercase tracking-widest transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                           title="Scan another brand-new card"
                         >
-                          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                          <span>Scan Next</span>
+                          <RefreshCw className="w-3.5 h-3.5 stroke-[2.5]" />
+                          <span>Scan again / New</span>
                         </button>
                       </div>
                     </div>

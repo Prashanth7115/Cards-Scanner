@@ -1,0 +1,6 @@
+{
+  "name": "InstaScan AI",
+  "description": "Smart Business Card and Brochure Scanner. Scan physical and uploaded cards using high-accuracy AI, extract contact details, and save or sync to Google Sheets seamlessly.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
